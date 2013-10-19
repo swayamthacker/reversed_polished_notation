@@ -1,0 +1,171 @@
+#include <iostream>
+#include<string>
+#include<sstream>
+
+using namespace std;
+
+int top = 0;
+const int size = 100;
+string character;
+string element;
+int x = 0;
+int temp = -1;
+int t,value,len;
+string regarray[size];
+string infix;
+string postfix;
+string operand;
+string operate;
+
+
+
+void push(string element)
+{
+        if(top!=size)
+    {
+        regarray[top] = element;
+        top++;
+        x++;
+        cout<<"The number of elements on the stack is "<<x<<endl;
+        cout<<"THe top in push is "<<top<<endl;
+
+
+    }
+        else
+        {
+               cout<<"Cannot add any more elements as the stack is full as the top is now"<<top<<endl;
+        }
+}
+
+string pop(void)
+{
+    if (top==0)
+            {
+
+
+            cout<<"Cannot pop any more elements as the stack is empty and top is now "<<top<<endl;
+            }
+        else
+        {
+            top--;
+            x--;
+            element = regarray[top];
+            cout<<"The popped element is "<<element<<endl;
+            cout<<"the top is "<<top<<endl;
+            cout<<"The number of elements on the stack is "<<x<<endl;
+        }
+return element;
+}
+
+string input()
+{
+    cout<<"Please enter the Infix string"<<endl;
+    getline(cin,infix);
+    return infix;
+}
+
+int precedence(string m)
+{
+    int f;
+    if(m == ")"|| m == "^")
+    {
+        f = 4;
+    }
+    else if(m == "/"|| m == "*" || m == "%")
+    {
+        f = 3;
+    }
+    else if(m == "+" || m == "-")
+        {
+           f = 2;
+        }
+    else if(m == "(")
+    {
+        f=1;
+    }
+    else
+    {
+        f = 0;
+    }
+
+    return f;
+}
+
+string convert()
+{
+    t = infix.length();
+    cout<<"the length of the string is "<<t<<endl;
+    for(int i = 0; i<t;i++)
+        {
+            cout<<"This is loop "<<i<<endl;
+
+    switch(infix[i])
+        {
+            case '+':case '-':case '*':case '/':case '^':
+
+operate=infix[i];
+ {
+     if(top==0||precedence(operate)> precedence(regarray[top-1]))
+     {
+
+         push(operate);
+         break;
+     }
+else
+     {
+         while(top!=0 && precedence(operate)<= precedence(regarray[top-1]))
+         {   cout<<"The operator's precedence "<<precedence(operate)<<endl;
+             cout<<"The stack's precedence"<<precedence(regarray[top])<<endl;
+             postfix.append(regarray[top-1]);
+             pop();
+         }
+         push(operate);
+         break;
+     }
+
+ }
+ case '(':
+        operate = infix[i];
+        {
+            push(operate);
+            break;
+        }
+case ')':
+        operate = infix[i];
+        {
+            while(precedence(regarray[top-1])!=1)
+            {
+                postfix.append(regarray[top-1]);
+                pop();
+            }
+            pop();
+            break;
+        }
+default:
+  {     cout<<"Entering default"<<endl;
+       operand = infix[i];
+       postfix.append(operand);
+       break;
+
+  }
+
+}
+    }
+    while(top!=0)
+    {
+        postfix.append(regarray[top-1]);
+        pop();
+    }
+
+return postfix;
+cout<<postfix<<endl;
+}
+
+int main()
+{
+    input();
+    convert();
+    cout <<"The postfix string is "<<postfix<< endl;
+
+    return 0;
+}
